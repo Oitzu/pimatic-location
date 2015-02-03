@@ -1,12 +1,16 @@
 package blackoise.de.pimaticlocation;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DownloadManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,8 +46,8 @@ public class Settings extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        settings = getPreferences(0);
-
+     //   settings = getPreferences(0);
+        settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
         textHost = (EditText) findViewById(R.id.editTextHost);
         textInterval = (EditText) findViewById(R.id.editTextInterval);
         textUser = (EditText) findViewById(R.id.editTextUser);
@@ -144,6 +148,14 @@ public class Settings extends Activity {
                                         settings.edit().putString("Password", textPassword.getText().toString()).apply();
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
+
+                                        Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
+                                        PendingIntent PLServicePendingIntent = PendingIntent.getService(getApplicationContext(), 0, PLServiceIntent, 0);
+
+                                        long interval = DateUtils.MINUTE_IN_MILLIS * Integer.parseInt(settings.getString("Interval", "5"));
+                                        long firstStart = System.currentTimeMillis() + interval;
+                                        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                        am.setRepeating(AlarmManager.RTC, firstStart, interval, PLServicePendingIntent);
                                     }
 
                                     @Override
