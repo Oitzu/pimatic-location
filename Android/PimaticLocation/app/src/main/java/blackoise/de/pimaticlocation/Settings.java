@@ -149,13 +149,15 @@ public class Settings extends Activity {
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
 
-                                        Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
-                                        PendingIntent PLServicePendingIntent = PendingIntent.getService(getApplicationContext(), 0, PLServiceIntent, 0);
+                                        if(autoRefresh.isChecked()) {
+                                            Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
+                                            PendingIntent PLServicePendingIntent = PendingIntent.getService(getApplicationContext(), 0, PLServiceIntent, 0);
 
-                                        long interval = DateUtils.MINUTE_IN_MILLIS * Integer.parseInt(settings.getString("Interval", "5"));
-                                        long firstStart = System.currentTimeMillis() + interval;
-                                        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                                        am.setRepeating(AlarmManager.RTC, firstStart, interval, PLServicePendingIntent);
+                                            long interval = DateUtils.MINUTE_IN_MILLIS * Integer.parseInt(settings.getString("Interval", "5"));
+                                            long firstStart = System.currentTimeMillis() + interval;
+                                            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                            am.setRepeating(AlarmManager.RTC, firstStart, interval, PLServicePendingIntent);
+                                        }
                                     }
 
                                     @Override
