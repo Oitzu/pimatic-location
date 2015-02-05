@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.loopj.android.http.*;
@@ -40,6 +41,9 @@ public class Settings extends Activity {
     EditText textPassword;
     EditText textVar;
     CheckBox autoRefresh;
+   // EditText textProtocol;
+    EditText textPort;
+    Spinner spinnerProtocol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,9 @@ public class Settings extends Activity {
         textPassword = (EditText) findViewById(R.id.editTextPassword);
         autoRefresh = (CheckBox) findViewById(R.id.checkBoxRefresh);
         textVar = (EditText) findViewById(R.id.editTextVar);
+       // textProtocol = (EditText) findViewById(R.id.editTextProtocol);
+        textPort = (EditText) findViewById(R.id.editTextPort);
+        spinnerProtocol = (Spinner) findViewById(R.id.spinnerProtocol);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
         textInterval.setText(settings.getString("Interval", "5"));
@@ -61,7 +68,16 @@ public class Settings extends Activity {
         textPassword.setText(settings.getString("Password", "admin"));
         autoRefresh.setChecked(settings.getBoolean("autoRefresh", true));
         textVar.setText(settings.getString("Var", "distance"));
-
+        textPort.setText(settings.getString("Port", "80"));
+       // spinnerProtocol.setPrompt(settings.getString("Protocol", "http"));
+        if(settings.getString("Protocol", "http").equals("http"))
+        {
+            spinnerProtocol.setSelection(0);
+        }
+        else
+        {
+            spinnerProtocol.setSelection(1);
+        }
     }
 
 
@@ -101,7 +117,9 @@ public class Settings extends Activity {
         final String locationProvider = LocationManager.NETWORK_PROVIDER;
         final Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
 
-        final API api = new API(textHost.getText().toString(), textUser.getText().toString(), textPassword.getText().toString());
+        Log.d("Port", textPort.getText().toString());
+        Log.d("Protocol", spinnerProtocol.getSelectedItem().toString());
+        final API api = new API(textHost.getText().toString(), spinnerProtocol.getSelectedItem().toString(), textPort.getText().toString(), textUser.getText().toString(), textPassword.getText().toString());
         //first get latitude of pimatic
         JSONObject jsonParams = new JSONObject();
         api.get("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
@@ -148,6 +166,8 @@ public class Settings extends Activity {
                                         settings.edit().putString("Password", textPassword.getText().toString()).apply();
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
+                                        settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
+                                        settings.edit().putString("Port", textPort.getText().toString()).apply();
 
                                         if(autoRefresh.isChecked()) {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);

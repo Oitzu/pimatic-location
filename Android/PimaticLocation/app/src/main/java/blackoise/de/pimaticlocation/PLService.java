@@ -46,7 +46,7 @@ public class PLService extends Service {
         final Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
 
-        final API api = new API(settings.getString("Host", "pimatic.example.org"), settings.getString("User", "admin"), settings.getString("Password", "admin"));
+        final API api = new API(settings.getString("Host", "pimatic.example.org"), settings.getString("Protocol", "http"), settings.getString("Port", "80"), settings.getString("User", "admin"), settings.getString("Password", "admin"));
         //first get latitude of pimatic
         JSONObject jsonParams = new JSONObject();
         api.get("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {

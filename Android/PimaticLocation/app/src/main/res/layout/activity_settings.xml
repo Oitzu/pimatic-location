@@ -19,7 +19,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextHost"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Protocol:"
+        android:id="@+id/textView7"/>
 
+    <Spinner
+        android:id="@+id/spinnerProtocol"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/protocol_array"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Port:"
+        android:id="@+id/textView8"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextPort"/>
+
+    </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,21 +97,17 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
         <EditText
-            android:layout_width="280dp"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:id="@+id/editTextInterval"/>
 
         <TextView
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Minutes"
-            android:id="@+id/textView3"
-            android:layout_below="@+id/textView2"
-            android:layout_toRightOf="@+id/editTextInterval"
-            android:layout_toEndOf="@+id/editTextInterval"
-            android:layout_column="29" />
+            android:id="@+id/textView3"/>
 </LinearLayout>
         <CheckBox
             android:layout_width="wrap_content"

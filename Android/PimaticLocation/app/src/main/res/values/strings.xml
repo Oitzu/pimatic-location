@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Pimatic Location</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="protocol_array">
+        <item>http</item>
+        <item>https</item>
+    </string-array>
+
 </resources>
