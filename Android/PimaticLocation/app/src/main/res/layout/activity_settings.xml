@@ -18,7 +18,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextHost"/>
+            android:id="@+id/editTextHost"
+            android:inputType="text" />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -45,7 +46,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextPort"/>
+        android:id="@+id/editTextPort"
+        android:inputType="number" />
 
     </LinearLayout>
         <TextView
@@ -85,7 +87,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextVar" />
+            android:id="@+id/editTextVar"
+            android:inputType="text" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -114,22 +117,13 @@
             android:layout_height="wrap_content"
             android:text="Auto refresh"
             android:id="@+id/checkBoxRefresh"
-            android:checked="false"
-            android:layout_alignBottom="@+id/SaveButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_column="21" />
+            android:checked="false" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Test &amp; Save"
             android:id="@+id/SaveButton"
-            android:onClick="OnClickSave"
-            android:layout_below="@+id/editTextInterval"
-            android:layout_alignRight="@+id/textView5"
-            android:layout_alignEnd="@+id/textView5"
-            android:layout_column="0"
-            android:layout_span="30" />
+            android:onClick="OnClickSave" />
 </LinearLayout>
 </ScrollView>
