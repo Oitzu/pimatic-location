@@ -119,7 +119,7 @@ public class Settings extends Activity {
 
         Log.d("Port", textPort.getText().toString());
         Log.d("Protocol", spinnerProtocol.getSelectedItem().toString());
-        final API api = new API(textHost.getText().toString(), spinnerProtocol.getSelectedItem().toString(), textPort.getText().toString(), textUser.getText().toString(), textPassword.getText().toString());
+        final API api = new API(textHost.getText().toString().trim(), spinnerProtocol.getSelectedItem().toString(), textPort.getText().toString().trim(), textUser.getText().toString(), textPassword.getText().toString());
         //first get latitude of pimatic
         JSONObject jsonParams = new JSONObject();
         api.get("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
@@ -160,14 +160,14 @@ public class Settings extends Activity {
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         Toast.makeText(getApplicationContext(), "Distance set.\nSaving settings.", Toast.LENGTH_LONG).show();
 
-                                        settings.edit().putString("Host", textHost.getText().toString()).apply();
+                                        settings.edit().putString("Host", textHost.getText().toString().trim()).apply();
                                         settings.edit().putString("Interval", textInterval.getText().toString()).apply();
                                         settings.edit().putString("User", textUser.getText().toString()).apply();
                                         settings.edit().putString("Password", textPassword.getText().toString()).apply();
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
                                         settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
-                                        settings.edit().putString("Port", textPort.getText().toString()).apply();
+                                        settings.edit().putString("Port", textPort.getText().toString().trim()).apply();
 
                                         if(autoRefresh.isChecked()) {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
