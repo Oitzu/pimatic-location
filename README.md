@@ -10,3 +10,6 @@ The distance will be reported in meters and as direct line between your smartpho
 
 You can use this website to get your longitude and latitude.
 http://www.mapcoordinates.net/en
+
+# Screenshots
+![Settings Window](https://raw.githubusercontent.com/Oitzu/pimatic-location/master/Android/screenshots/2015-02-06%2012.05.59.png)
