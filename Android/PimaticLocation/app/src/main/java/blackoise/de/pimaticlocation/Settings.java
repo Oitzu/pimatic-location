@@ -171,12 +171,16 @@ public class Settings extends Activity {
 
                                         if(autoRefresh.isChecked()) {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
+                                            /*
                                             PendingIntent PLServicePendingIntent = PendingIntent.getService(getApplicationContext(), 0, PLServiceIntent, 0);
 
                                             long interval = DateUtils.MINUTE_IN_MILLIS * Integer.parseInt(settings.getString("Interval", "5"));
                                             long firstStart = System.currentTimeMillis() + interval;
                                             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                                             am.setRepeating(AlarmManager.RTC, firstStart, interval, PLServicePendingIntent);
+
+                                             */
+                                            getApplicationContext().startService(PLServiceIntent);
                                         }
                                     }
 
