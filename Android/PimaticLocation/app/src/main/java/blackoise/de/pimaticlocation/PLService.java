@@ -30,6 +30,7 @@ public class PLService extends Service {
 
     @Override
     public void onCreate() {
+
         Log.v("PLService", "Service created.");
     }
 
@@ -37,6 +38,12 @@ public class PLService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("PLService", "Service started.");
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
+        if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
+            if ("text/plain".equals(intent.getType())) {
+                settings.edit().putString("Interval", intent.getStringExtra(Intent.EXTRA_TEXT)).apply();
+            }
+        }
+
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, Integer.parseInt(settings.getString("Interval", "60000")), locListener);
         locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locListener);
