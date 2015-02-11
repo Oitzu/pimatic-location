@@ -41,9 +41,9 @@ public class Settings extends Activity {
     EditText textPassword;
     EditText textVar;
     CheckBox autoRefresh;
-   // EditText textProtocol;
     EditText textPort;
     Spinner spinnerProtocol;
+    CheckBox writeLogfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,7 @@ public class Settings extends Activity {
         {
             spinnerProtocol.setSelection(1);
         }
+        writeLogfile.setChecked(settings.getBoolean("writeLogfile", true));
     }
 
 
@@ -168,7 +169,7 @@ public class Settings extends Activity {
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
                                         settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
                                         settings.edit().putString("Port", textPort.getText().toString().trim()).apply();
-
+                                        settings.edit().putBoolean("writeLogfile", writeLogfile.isChecked()).apply();
                                         if(autoRefresh.isChecked()) {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
                                             /*

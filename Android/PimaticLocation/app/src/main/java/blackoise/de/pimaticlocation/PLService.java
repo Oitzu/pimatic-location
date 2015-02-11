@@ -17,6 +17,10 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Created by Oitzu on 03.02.2015.
  */
@@ -43,6 +47,8 @@ public class PLService extends Service {
                 settings.edit().putString("Interval", intent.getStringExtra(Intent.EXTRA_TEXT)).apply();
             }
         }
+
+        writeLog("Starting service with interval of " + Integer.parseInt(settings.getString("Interval", "60000")) +"ms.");
 
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, Integer.parseInt(settings.getString("Interval", "60000")), locListener);
@@ -100,6 +106,7 @@ public class PLService extends Service {
                                         settings.edit().putString("Password", textPassword.getText().toString()).apply();
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply(); */
+                                        writeLog("Updated distance to " + settings.getString("Var", "distance") +"m");
                                     }
 
                                     @Override
@@ -134,11 +141,36 @@ public class PLService extends Service {
         });
     }
 
+    private void writeLog(String text)
+    {
+        final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
+        if(settings.getBoolean("writeLogfile", true))
+        {
+            try {
+                String date = android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", new java.util.Date()).toString();
+
+                String logLine = date + ": " + text + "\n";
+
+                FileOutputStream fos = openFileOutput("logfile", Context.MODE_WORLD_READABLE | Context.MODE_APPEND);
+
+                fos.write(logLine.getBytes());
+
+                fos.close();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+        }
+    }
+
     private class myLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
 
             if(location!=null){
+                writeLog("Location update received. Provider: " + location.getProvider());
                 updateLocation(location);
                 Log.v("Debug", "Location changed.");
             }
