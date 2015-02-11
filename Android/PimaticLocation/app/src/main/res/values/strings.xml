@@ -6,5 +6,8 @@
         <item>http</item>
         <item>https</item>
     </string-array>
+    <string name="title_activity_show_logfile">Pimatic Location Logfile</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
