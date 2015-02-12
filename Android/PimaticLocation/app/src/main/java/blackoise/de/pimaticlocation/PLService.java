@@ -106,7 +106,7 @@ public class PLService extends Service {
                                         settings.edit().putString("Password", textPassword.getText().toString()).apply();
                                         settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
                                         settings.edit().putString("Var", textVar.getText().toString()).apply(); */
-                                        writeLog("Updated distance to " + settings.getString("Var", "distance") +"m");
+                                        writeLog("Updated distance to " + distance +"m");
                                     }
 
                                     @Override
