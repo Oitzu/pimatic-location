@@ -1,0 +1,3 @@
+[submodule "pimatic-plugin"]
+	path = pimatic-plugin
+	url = https://github.com/Oitzu/pimatic-location-plugin.git
