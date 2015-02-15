@@ -1,4 +1,4 @@
-package blackoise.de.pimaticlocation;
+package de.blackoise.pimaticlocation;
 
 import android.app.Service;
 import android.content.Context;
@@ -18,8 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileOutputStream;
-import java.text.DateFormat;
-import java.util.Date;
 
 /**
  * Created by Oitzu on 03.02.2015.

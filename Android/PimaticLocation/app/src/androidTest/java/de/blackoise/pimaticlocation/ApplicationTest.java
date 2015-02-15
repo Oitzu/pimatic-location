@@ -1,4 +1,4 @@
-package blackoise.de.pimaticlocation;
+package de.blackoise.pimaticlocation;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
