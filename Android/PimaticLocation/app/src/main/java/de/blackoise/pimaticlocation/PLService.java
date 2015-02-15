@@ -41,7 +41,9 @@ public class PLService extends Service {
         Log.v("PLService", "Service started.");
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
+            writeLog("Intent with type " + intent.getType()+" received.");
             if ("text/plain".equals(intent.getType())) {
+                writeLog("Intent Value: "+intent.getStringExtra(Intent.EXTRA_TEXT));
                 settings.edit().putString("Interval", intent.getStringExtra(Intent.EXTRA_TEXT)).apply();
             }
         }
