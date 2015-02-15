@@ -149,7 +149,7 @@ public class PLService extends Service {
 
                 String logLine = date + ": " + text + "\n";
 
-                FileOutputStream fos = openFileOutput("logfile", Context.MODE_WORLD_READABLE | Context.MODE_APPEND);
+                FileOutputStream fos = openFileOutput("logfile", Context.MODE_PRIVATE | Context.MODE_APPEND);
 
                 fos.write(logLine.getBytes());
 
