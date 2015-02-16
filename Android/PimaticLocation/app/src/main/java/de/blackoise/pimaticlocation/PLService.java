@@ -44,7 +44,9 @@ public class PLService extends Service {
             writeLog("Intent with type " + intent.getType()+" received.");
             if ("text/plain".equals(intent.getType())) {
                 writeLog("Intent Value: "+intent.getStringExtra("INTERVAL"));
-                settings.edit().putString("Interval", intent.getStringExtra("INTERVAL")).apply();
+                Bundle extras = intent.getExtras();
+                int interval = extras.getInt("android.intent.extra.INTERVAL");
+                settings.edit().putString("Interval",String.valueOf(interval)).apply();
             }
         }
 
