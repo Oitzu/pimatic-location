@@ -43,8 +43,8 @@ public class PLService extends Service {
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
             writeLog("Intent with type " + intent.getType()+" received.");
             if ("text/plain".equals(intent.getType())) {
-                writeLog("Intent Value: "+intent.getStringExtra(Intent.EXTRA_TEXT));
-                settings.edit().putString("Interval", intent.getStringExtra(Intent.EXTRA_TEXT)).apply();
+                writeLog("Intent Value: "+intent.getStringExtra("INTERVAL"));
+                settings.edit().putString("Interval", intent.getStringExtra("INTERVAL")).apply();
             }
         }
 
