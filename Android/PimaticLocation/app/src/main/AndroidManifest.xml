@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="blackoise.de.pimaticlocation" >
+    package="de.blackoise.pimaticlocation" >
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,19 +12,35 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Settings"
-            android:label="@string/app_name" >
+            android:label="@string/title_activity_settings" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".PLService">
+
+        <service android:name=".PLService" >
             <intent-filter>
-                <action android:name="de.blackoise.pimaticlocation.PLService">
-                </action>
+                <action android:name="de.blackoise.pimaticlocation.PLService" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".ShowLogfile"
+            android:label="@string/title_activity_show_logfile"
+            android:parentActivityName=".Settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Settings" />
+        </activity>
     </application>
 
 </manifest>

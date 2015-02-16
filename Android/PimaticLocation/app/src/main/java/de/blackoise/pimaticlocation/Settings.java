@@ -1,4 +1,4 @@
-package blackoise.de.pimaticlocation;
+package de.blackoise.pimaticlocation;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -41,9 +41,9 @@ public class Settings extends Activity {
     EditText textPassword;
     EditText textVar;
     CheckBox autoRefresh;
-   // EditText textProtocol;
     EditText textPort;
     Spinner spinnerProtocol;
+    CheckBox writeLogfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +58,17 @@ public class Settings extends Activity {
         textPassword = (EditText) findViewById(R.id.editTextPassword);
         autoRefresh = (CheckBox) findViewById(R.id.checkBoxRefresh);
         textVar = (EditText) findViewById(R.id.editTextVar);
-       // textProtocol = (EditText) findViewById(R.id.editTextProtocol);
         textPort = (EditText) findViewById(R.id.editTextPort);
         spinnerProtocol = (Spinner) findViewById(R.id.spinnerProtocol);
+        writeLogfile = (CheckBox) findViewById(R.id.checkBoxLogfile);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
-        textInterval.setText(settings.getString("Interval", "5"));
+        textInterval.setText(settings.getString("Interval", "60000"));
         textUser.setText(settings.getString("User", "admin"));
         textPassword.setText(settings.getString("Password", "admin"));
         autoRefresh.setChecked(settings.getBoolean("autoRefresh", true));
         textVar.setText(settings.getString("Var", "distance"));
         textPort.setText(settings.getString("Port", "80"));
-       // spinnerProtocol.setPrompt(settings.getString("Protocol", "http"));
         if(settings.getString("Protocol", "http").equals("http"))
         {
             spinnerProtocol.setSelection(0);
@@ -78,8 +77,14 @@ public class Settings extends Activity {
         {
             spinnerProtocol.setSelection(1);
         }
+        writeLogfile.setChecked(settings.getBoolean("writeLogfile", true));
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        textInterval.setText(settings.getString("Interval", "60000"));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,17 +95,13 @@ public class Settings extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.show_logfile:
+                startActivity(new Intent(Settings.this, ShowLogfile.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void OnClickSave(View v) {
@@ -168,15 +169,10 @@ public class Settings extends Activity {
                                         settings.edit().putString("Var", textVar.getText().toString()).apply();
                                         settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
                                         settings.edit().putString("Port", textPort.getText().toString().trim()).apply();
-
+                                        settings.edit().putBoolean("writeLogfile", writeLogfile.isChecked()).apply();
                                         if(autoRefresh.isChecked()) {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
-                                            PendingIntent PLServicePendingIntent = PendingIntent.getService(getApplicationContext(), 0, PLServiceIntent, 0);
-
-                                            long interval = DateUtils.MINUTE_IN_MILLIS * Integer.parseInt(settings.getString("Interval", "5"));
-                                            long firstStart = System.currentTimeMillis() + interval;
-                                            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                                            am.setRepeating(AlarmManager.RTC, firstStart, interval, PLServicePendingIntent);
+                                            getApplicationContext().startService(PLServiceIntent);
                                         }
                                     }
 
