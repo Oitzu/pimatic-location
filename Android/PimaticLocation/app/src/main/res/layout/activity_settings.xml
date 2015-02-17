@@ -81,13 +81,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Variable:"
+            android:text="Device-ID:"
             android:id="@+id/textView6"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextVar"
+            android:id="@+id/editTextDeviceID"
             android:inputType="text" />
 
         <TextView

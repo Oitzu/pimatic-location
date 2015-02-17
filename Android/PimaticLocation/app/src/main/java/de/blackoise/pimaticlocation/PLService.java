@@ -64,7 +64,7 @@ public class PLService extends Service {
         final API api = new API(settings.getString("Host", "pimatic.example.org"), settings.getString("Protocol", "http"), settings.getString("Port", "80"), settings.getString("User", "admin"), settings.getString("Password", "admin"));
         //first get latitude of pimatic
         JSONObject jsonParams = new JSONObject();
-        api.get("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
+        api.get_variable("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -75,7 +75,7 @@ public class PLService extends Service {
 
                     //second get longitude of pimatic
                     JSONObject jsonParams = new JSONObject();
-                    api.get("longitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
+                    api.get_variable("longitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
