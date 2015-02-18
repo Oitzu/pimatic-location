@@ -61,7 +61,7 @@ public class API {
         }
     }
 
-    public void set_LinearDistance(String deviceID, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+    public void update_LinearDistance(String deviceID, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
         try {
             StringEntity entity = new StringEntity(params.toString());
             entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));

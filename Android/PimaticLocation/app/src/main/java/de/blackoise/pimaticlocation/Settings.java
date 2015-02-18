@@ -155,7 +155,7 @@ public class Settings extends Activity {
                                 //update distance variable
                                 JSONObject jsonParams = new JSONObject();
                                 jsonParams.put("distance", distance);
-                                api.set_LinearDistance(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
+                                api.update_LinearDistance(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         Toast.makeText(getApplicationContext(), "Distance set.\nSaving settings.", Toast.LENGTH_LONG).show();

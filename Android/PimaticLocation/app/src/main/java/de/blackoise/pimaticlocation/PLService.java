@@ -95,19 +95,10 @@ public class PLService extends Service {
 
                                 //update distance variable
                                 JSONObject jsonParams = new JSONObject();
-                                jsonParams.put("type", "value");
-                                jsonParams.put("valueOrExpression", distance);
-                                api.patch(settings.getString("Var", "distance"), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
+                                jsonParams.put("distance", distance);
+                                api.update_LinearDistance(settings.getString("DeviceID", android.os.Build.MODEL), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                      //  Toast.makeText(getApplicationContext(), "Distance set.\nSaving settings.", Toast.LENGTH_LONG).show();
-/*
-                                        settings.edit().putString("Host", textHost.getText().toString()).apply();
-                                        settings.edit().putString("Interval", textInterval.getText().toString()).apply();
-                                        settings.edit().putString("User", textUser.getText().toString()).apply();
-                                        settings.edit().putString("Password", textPassword.getText().toString()).apply();
-                                        settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
-                                        settings.edit().putString("Var", textVar.getText().toString()).apply(); */
                                         writeLog("Updated distance to " + distance +"m");
                                     }
 
@@ -153,7 +144,7 @@ public class PLService extends Service {
 
                 String logLine = date + ": " + text + "\n";
 
-                FileOutputStream fos = openFileOutput("logfile", Context.MODE_PRIVATE | Context.MODE_APPEND);
+                FileOutputStream fos = openFileOutput("logfile", Context.MODE_APPEND);
 
                 fos.write(logLine.getBytes());
 
