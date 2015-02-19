@@ -6,6 +6,12 @@
         <item>http</item>
         <item>https</item>
     </string-array>
+    <string-array name="priority_array">
+        <item>Balanced Power</item>
+        <item>High</item>
+        <item>Low</item>
+        <item>No</item>
+    </string-array>
     <string name="title_activity_show_logfile">Pimatic Location Logfile</string>
     <string name="title_activity_settings">Pimatic Location Settings</string>
 

@@ -1,0 +1,10 @@
+Version 1.1.0
+===============
+* Changed location updates to Google Services API.
+* Integrated basic use of pimatic-location plugin.
+
+Version 1.0.1
+===============
+* Added logfile and logfile view
+* Added intent to change interval
+* Changed to location listener

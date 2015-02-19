@@ -43,6 +43,7 @@ public class Settings extends Activity {
     CheckBox autoRefresh;
     EditText textPort;
     Spinner spinnerProtocol;
+    Spinner spinnerPriority;
     CheckBox writeLogfile;
 
     @Override
@@ -61,14 +62,16 @@ public class Settings extends Activity {
         textPort = (EditText) findViewById(R.id.editTextPort);
         spinnerProtocol = (Spinner) findViewById(R.id.spinnerProtocol);
         writeLogfile = (CheckBox) findViewById(R.id.checkBoxLogfile);
+        spinnerPriority = (Spinner) findViewById(R.id.spinnerPriority);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
-        textInterval.setText(settings.getString("Interval", "60000"));
+        textInterval.setText(settings.getString("Interval", "600000"));
         textUser.setText(settings.getString("User", "admin"));
         textPassword.setText(settings.getString("Password", "admin"));
         autoRefresh.setChecked(settings.getBoolean("autoRefresh", true));
         textDeviceID.setText(settings.getString("DeviceID", android.os.Build.MODEL));
         textPort.setText(settings.getString("Port", "80"));
+
         if(settings.getString("Protocol", "http").equals("http"))
         {
             spinnerProtocol.setSelection(0);
@@ -77,13 +80,17 @@ public class Settings extends Activity {
         {
             spinnerProtocol.setSelection(1);
         }
+
+        spinnerPriority.setSelection(settings.getInt("Priority", 0));
+
         writeLogfile.setChecked(settings.getBoolean("writeLogfile", true));
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        textInterval.setText(settings.getString("Interval", "60000"));
+        textInterval.setText(settings.getString("Interval", "600000"));
+        spinnerPriority.setSelection(settings.getInt("Priority", 0));
     }
 
     @Override
@@ -173,6 +180,7 @@ public class Settings extends Activity {
                                             Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
                                             getApplicationContext().startService(PLServiceIntent);
                                         }
+                                        settings.edit().putInt("Priority", spinnerPriority.getSelectedItemPosition()).apply();
                                     }
 
                                     @Override
