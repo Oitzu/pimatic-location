@@ -34,26 +34,29 @@ Example:
 
 # Configuring the Application
 Following Options are available:
-Host: The IP or Hostname of your Pimatic.
-Protocol: The Protocol to use to connect to Pimatic. (Default: http)
-Port: The Port to use to connect to Pimatic. (Default: 80)
-User: The Pimatic-User to use to connect to your Pimatic. (Default: Admin)
-Password: The Password corresponding to the Pimatic-User.
-Device-ID: The id of the Device you created for this Smartphone.
-Interval: The interval of location updates in milliseconds at which you prefer to receive location updates. (Default: 600000 (10 Minutes))
-Priority: The priority of the location updates you want to receive. (Default: Balanced Power)
-- Balanced Power: Precision to within a city block, which is an accuracy of approximately 100 meters. With this setting, the location services are likely to use WiFi and cell tower positioning.
-- High: Request the most precise location possible. With this setting, the location services are more likely to use GPS.
-- Low: Use this setting to request city-level precision, which is an accuracy of approximately 10 kilometers.
-- No: Use this setting if you need negligible impact on power consumption, but want to receive location updates when available. With this setting, the app does not trigger any location updates, but receives locations triggered by other apps.
+
+- Host: The IP or Hostname of your Pimatic.
+- Protocol: The Protocol to use to connect to Pimatic. (Default: http)
+- Port: The Port to use to connect to Pimatic. (Default: 80)
+- User: The Pimatic-User to use to connect to your Pimatic. (Default: Admin)
+- Password: The Password corresponding to the Pimatic-User.
+- Device-ID: The id of the Device you created for this Smartphone.
+- Interval: The interval of location updates in milliseconds at which you prefer to receive location updates. (Default: 600000 (10 Minutes))
+- Priority: The priority of the location updates you want to receive. (Default: Balanced Power)
+  * Balanced Power: Precision to within a city block, which is an accuracy of approximately 100 meters. With this setting, the location services are likely to use   * WiFi and cell tower positioning.
+  * High: Request the most precise location possible. With this setting, the location services are more likely to use GPS.
+  * Low: Use this setting to request city-level precision, which is an accuracy of approximately 10 kilometers.
+  * No: Use this setting if you need negligible impact on power consumption, but want to receive location updates when available. With this setting, the app does not trigger any location updates, but receives locations triggered by other apps.
+
 (Source: https://developer.android.com/training/location/receive-location-updates.html#location-request)
-Auto refresh: Starts the service that updates the smartphones location in background, based on your settings, to your Pimatic. (Default: On)
-Write logfile: Write to a logfile informations about location updates and service activity. (Default: Off)
-Test & Save: Test and Save your Settings. Starts the location-Service if auto refresh is on.
+- Auto refresh: Starts the service that updates the smartphones location in background, based on your settings, to your Pimatic. (Default: On)
+- Write logfile: Write to a logfile informations about location updates and service activity. (Default: Off)
+- Test & Save: Test and Save your Settings. Starts the location-Service if auto refresh is on.
 
 # Tasker integration
 
 You can use the Android App "Tasker" to send an intent to the application to set a new interval or a new priority.
+
 Tasker example intent config for interval:
 ```
 Send Intent [ 
