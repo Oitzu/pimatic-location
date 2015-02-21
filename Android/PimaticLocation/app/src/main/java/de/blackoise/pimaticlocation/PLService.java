@@ -161,77 +161,33 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     {
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
         final API api = new API(settings.getString("Host", "pimatic.example.org"), settings.getString("Protocol", "http"), settings.getString("Port", "80"), settings.getString("User", "admin"), settings.getString("Password", "admin"));
-        //first get latitude of pimatic
-        JSONObject jsonParams = new JSONObject();
-        api.get_variable("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try
-                {
-                    //save latitude for later use
-                    final JSONObject latitudeVariable = response.getJSONObject("variable");
+        try {
+            //update location
+            JSONObject jsonParams = new JSONObject();
+            jsonParams.put("long", lastKnownLocation.getLongitude());
+            jsonParams.put("lat", lastKnownLocation.getLatitude());
+            jsonParams.put("updateAddress", settings.getBoolean("resportAddress",false)?'1':'0');
 
-                    //second get longitude of pimatic
-                    JSONObject jsonParams = new JSONObject();
-                    api.get_variable("longitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                //save longitude for later use
-                                final JSONObject longitudeVariable = response.getJSONObject("variable");
-
-                                //set Location to Location-Object
-                                Location pimaticLocation = new Location("JSON");
-                                pimaticLocation.setLatitude(latitudeVariable.getDouble("value"));
-                                pimaticLocation.setLongitude(longitudeVariable.getDouble("value"));
-
-                                Log.i("Location:", lastKnownLocation.toString());
-                                Log.i("Location:", pimaticLocation.toString());
-
-                                //calculate distance
-                                final float distance = lastKnownLocation.distanceTo(pimaticLocation);
-
-                                //update distance variable
-                                JSONObject jsonParams = new JSONObject();
-                                jsonParams.put("distance", distance);
-                                api.update_LinearDistance(settings.getString("DeviceID", android.os.Build.MODEL), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
-                                    @Override
-                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                        writeLog("Updated distance to " + distance +"m");
-                                    }
-
-                                    @Override
-                                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                                     //   Toast.makeText(getApplicationContext(), "Couldn't set distance.\nPlease check '"+ textVar.getText().toString() +"'-variable.", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                          //  Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check 'Longitude'-variable.", Toast.LENGTH_LONG).show();
-                        }
-
-                    });
-
+            api.update_Location(settings.getString("DeviceID", android.os.Build.MODEL), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    writeLog("Updated location successfully.");
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-              //  Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check config and 'Latitude'-variable.", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    writeLog("Failed to update location.\nError:"+response.toString());
+                }
+            });
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
+
+
 
     private void writeLog(String text)
     {

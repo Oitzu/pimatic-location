@@ -72,6 +72,17 @@ public class API {
         }
     }
 
+    public void update_Location(String deviceID, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+        try {
+            StringEntity entity = new StringEntity(params.toString());
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            client.get(context, protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/updateLocation", entity, "application/json", responseHandler);
+            Log.d("API", protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/updateLocation");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void patch(String variable, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler)
     {
         try

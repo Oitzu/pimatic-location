@@ -2,6 +2,7 @@ Version 1.1.0
 ===============
 * Changed location updates to Google Services API.
 * Integrated basic use of pimatic-location plugin.
+* Changed to send location instead distance to plugin. Calculation moved to plugin.
 
 Version 1.0.1
 ===============

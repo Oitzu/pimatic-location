@@ -1,16 +1,7 @@
 # pimatic-location
 
-To use this app you need to add 2 variables to your Pimatic and install the Plugin "pimatic-location".
-
-Variables:
-
-1. longitude - longitude of your home
-2. latitude - latitude of your home
-
-The distance will be reported in meters and as direct line between your smartphone and the given location.
-
-You can use this website to get your longitude and latitude.
-http://www.mapcoordinates.net/en
+To use this app you need to install the Plugin "pimatic-location".
+You need to add a device to your Pimatic config for each smartphone that should report it's location.
 
 Plugin:
 
@@ -28,9 +19,14 @@ Example:
     {
       "id": "your-phone",
       "name": "your-phone",
-      "class": "LocationDevice"
+      "class": "LocationDevice",
+      "lat": "52.5200066",
+      "long": "13.404954"
     },
 ```
+The lat and long values correspond to the location you want the distance to be calculated.
+You can use this website to get your longitude and latitude.
+http://www.mapcoordinates.net/en
 
 # Configuring the Application
 Following Options are available:

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.loopj.android.http.*;
@@ -45,6 +46,7 @@ public class Settings extends Activity {
     Spinner spinnerProtocol;
     Spinner spinnerPriority;
     CheckBox writeLogfile;
+    Switch switchAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class Settings extends Activity {
         spinnerProtocol = (Spinner) findViewById(R.id.spinnerProtocol);
         writeLogfile = (CheckBox) findViewById(R.id.checkBoxLogfile);
         spinnerPriority = (Spinner) findViewById(R.id.spinnerPriority);
+        switchAddress = (Switch) findViewById(R.id.switchAddress);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
         textInterval.setText(settings.getString("Interval", "600000"));
@@ -84,6 +87,7 @@ public class Settings extends Activity {
         spinnerPriority.setSelection(settings.getInt("Priority", 0));
 
         writeLogfile.setChecked(settings.getBoolean("writeLogfile", true));
+        switchAddress.setChecked(settings.getBoolean("reportAddress", true));
     }
 
     @Override
@@ -128,91 +132,50 @@ public class Settings extends Activity {
         Log.d("Port", textPort.getText().toString());
         Log.d("Protocol", spinnerProtocol.getSelectedItem().toString());
         final API api = new API(textHost.getText().toString().trim(), spinnerProtocol.getSelectedItem().toString(), textPort.getText().toString().trim(), textUser.getText().toString(), textPassword.getText().toString());
-        //first get latitude of pimatic
-        JSONObject jsonParams = new JSONObject();
-        api.get_variable("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
+        try {
+            //update location
+            JSONObject jsonParams = new JSONObject();
+            jsonParams.put("long", lastKnownLocation.getLongitude());
+            jsonParams.put("lat", lastKnownLocation.getLatitude());
+            jsonParams.put("updateAddress", switchAddress.isChecked()?'1':'0');
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try
-                {
-                    //save latitude for later use
-                    final JSONObject latitudeVariable = response.getJSONObject("variable");
+            api.update_Location(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Toast.makeText(getApplicationContext(), "Distance successfully updated.\nSaving settings.", Toast.LENGTH_LONG).show();
 
-                    //second get longitude of pimatic
-                    JSONObject jsonParams = new JSONObject();
-                    api.get_variable("longitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                //save longitude for later use
-                                final JSONObject longitudeVariable = response.getJSONObject("variable");
-
-                                //set Location to Location-Object
-                                Location pimaticLocation = new Location("JSON");
-                                pimaticLocation.setLatitude(latitudeVariable.getDouble("value"));
-                                pimaticLocation.setLongitude(longitudeVariable.getDouble("value"));
-
-                                Log.i("Location:", lastKnownLocation.toString());
-                                Log.i("Location:", pimaticLocation.toString());
-
-                                //calculate distance
-                                final float distance = lastKnownLocation.distanceTo(pimaticLocation);
-
-                                //update distance variable
-                                JSONObject jsonParams = new JSONObject();
-                                jsonParams.put("distance", distance);
-                                api.update_LinearDistance(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
-                                    @Override
-                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                        Toast.makeText(getApplicationContext(), "Distance set.\nSaving settings.", Toast.LENGTH_LONG).show();
-
-                                        settings.edit().putString("Host", textHost.getText().toString().trim()).apply();
-                                        settings.edit().putString("Interval", textInterval.getText().toString()).apply();
-                                        settings.edit().putString("User", textUser.getText().toString()).apply();
-                                        settings.edit().putString("Password", textPassword.getText().toString()).apply();
-                                        settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
-                                        settings.edit().putString("DeviceID", textDeviceID.getText().toString()).apply();
-                                        settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
-                                        settings.edit().putString("Port", textPort.getText().toString().trim()).apply();
-                                        settings.edit().putBoolean("writeLogfile", writeLogfile.isChecked()).apply();
-                                        if(autoRefresh.isChecked()) {
-                                            Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
-                                            getApplicationContext().startService(PLServiceIntent);
-                                        }
-                                        settings.edit().putInt("Priority", spinnerPriority.getSelectedItemPosition()).apply();
-                                    }
-
-                                    @Override
-                                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                                        Toast.makeText(getApplicationContext(), "Couldn't set distance.\nPlease check the Device ID.", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                            Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check 'Longitude'-variable.", Toast.LENGTH_LONG).show();
-                        }
-
-                    });
-
+                    settings.edit().putString("Host", textHost.getText().toString().trim()).apply();
+                    settings.edit().putString("Interval", textInterval.getText().toString()).apply();
+                    settings.edit().putString("User", textUser.getText().toString()).apply();
+                    settings.edit().putString("Password", textPassword.getText().toString()).apply();
+                    settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
+                    settings.edit().putString("DeviceID", textDeviceID.getText().toString()).apply();
+                    settings.edit().putString("Protocol", spinnerProtocol.getSelectedItem().toString()).apply();
+                    settings.edit().putString("Port", textPort.getText().toString().trim()).apply();
+                    settings.edit().putBoolean("writeLogfile", writeLogfile.isChecked()).apply();
+                    if(autoRefresh.isChecked()) {
+                        Toast.makeText(getApplicationContext(), "Starting service.", Toast.LENGTH_LONG).show();
+                        Intent PLServiceIntent = new Intent(getApplicationContext(), PLService.class);
+                        getApplicationContext().startService(PLServiceIntent);
+                    }
+                    settings.edit().putInt("Priority", spinnerPriority.getSelectedItemPosition()).apply();
+                    settings.edit().putBoolean("reportAddress", switchAddress.isChecked()).apply();
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check config and 'Latitude'-variable.", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    Toast.makeText(getApplicationContext(), "Couldn't update location. Error: " + response.toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
+
+
+
+
 
 }

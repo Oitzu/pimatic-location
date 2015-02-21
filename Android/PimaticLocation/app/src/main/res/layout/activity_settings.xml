@@ -130,6 +130,14 @@
             android:entries="@array/priority_array"/>
     </LinearLayout>
 
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Report current address"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switchAddress"
+        android:checked="false" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -137,6 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Auto refresh"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/checkBoxRefresh"
             android:checked="false"
             android:layout_gravity="left"/>
@@ -145,10 +154,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Write logfile"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/checkBoxLogfile"
         android:layout_gravity="right"
         android:checked="false" />
     </LinearLayout>
+
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
