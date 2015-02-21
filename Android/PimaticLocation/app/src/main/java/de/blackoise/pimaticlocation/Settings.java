@@ -86,8 +86,8 @@ public class Settings extends Activity {
 
         spinnerPriority.setSelection(settings.getInt("Priority", 0));
 
-        writeLogfile.setChecked(settings.getBoolean("writeLogfile", true));
-        switchAddress.setChecked(settings.getBoolean("reportAddress", true));
+        writeLogfile.setChecked(settings.getBoolean("writeLogfile", false));
+        switchAddress.setChecked(settings.getBoolean("reportAddress", false));
     }
 
     @Override
@@ -137,7 +137,7 @@ public class Settings extends Activity {
             JSONObject jsonParams = new JSONObject();
             jsonParams.put("long", lastKnownLocation.getLongitude());
             jsonParams.put("lat", lastKnownLocation.getLatitude());
-            jsonParams.put("updateAddress", switchAddress.isChecked()?'1':'0');
+            jsonParams.put("updateAddress", switchAddress.isChecked()?1:0);
 
             api.update_Location(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
                 @Override

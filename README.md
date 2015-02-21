@@ -47,6 +47,7 @@ Following Options are available:
 (Source: https://developer.android.com/training/location/receive-location-updates.html#location-request)
 - Auto refresh: Starts the service that updates the smartphones location in background, based on your settings, to your Pimatic. (Default: On)
 - Write logfile: Write to a logfile informations about location updates and service activity. (Default: Off)
+- Report current address: Should your current address be shown in pimatic?
 - Test & Save: Test and Save your Settings. Starts the location-Service if auto refresh is on.
 
 # Tasker integration
