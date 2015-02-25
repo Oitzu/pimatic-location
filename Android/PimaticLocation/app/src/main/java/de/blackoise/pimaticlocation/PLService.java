@@ -167,7 +167,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
             JSONObject jsonParams = new JSONObject();
             jsonParams.put("long", lastKnownLocation.getLongitude());
             jsonParams.put("lat", lastKnownLocation.getLatitude());
-            jsonParams.put("updateAddress", settings.getBoolean("resportAddress",false)?1:0);
+            jsonParams.put("updateAddress", settings.getBoolean("reportAddress",false)?1:0);
 
             api.update_Location(settings.getString("DeviceID", android.os.Build.MODEL), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
                 @Override
@@ -177,7 +177,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                    writeLog("Failed to update location.\nError:"+response.toString());
+                    writeLog("Failed to update location. Check your connection.");
                 }
             });
         }

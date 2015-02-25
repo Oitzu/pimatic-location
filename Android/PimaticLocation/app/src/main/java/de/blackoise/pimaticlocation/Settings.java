@@ -164,7 +164,7 @@ public class Settings extends Activity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                    Toast.makeText(getApplicationContext(), "Couldn't update location. Error: " + response.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Couldn't update location. Check your connection and Device config.", Toast.LENGTH_LONG).show();
                 }
             });
         }
