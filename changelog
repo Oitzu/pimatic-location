@@ -6,6 +6,7 @@ Version 1.1.0
 * Added the option to decide if the current address should be shown in Pimatic. (Privacy option)
 * Added the option to change the interval limit.
 * Fixed crash on no connection bug.
+* Added translation feature.
 
 Version 1.0.1
 ===============
