@@ -47,6 +47,7 @@ public class Settings extends Activity {
     Spinner spinnerPriority;
     CheckBox writeLogfile;
     Switch switchAddress;
+    EditText textIntervalLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class Settings extends Activity {
         writeLogfile = (CheckBox) findViewById(R.id.checkBoxLogfile);
         spinnerPriority = (Spinner) findViewById(R.id.spinnerPriority);
         switchAddress = (Switch) findViewById(R.id.switchAddress);
+        textIntervalLimit = (EditText) findViewById(R.id.editTextIntervalLimit);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
         textInterval.setText(settings.getString("Interval", "600000"));
@@ -88,6 +90,7 @@ public class Settings extends Activity {
 
         writeLogfile.setChecked(settings.getBoolean("writeLogfile", false));
         switchAddress.setChecked(settings.getBoolean("reportAddress", false));
+        textIntervalLimit.setText(settings.getString("IntervalLimit", "60000"));
     }
 
     @Override
@@ -160,6 +163,7 @@ public class Settings extends Activity {
                     }
                     settings.edit().putInt("Priority", spinnerPriority.getSelectedItemPosition()).apply();
                     settings.edit().putBoolean("reportAddress", switchAddress.isChecked()).apply();
+                    settings.edit().putString("IntervalLimit", textIntervalLimit.getText().toString()).apply();
                 }
 
                 @Override

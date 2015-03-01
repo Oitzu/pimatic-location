@@ -1,9 +1,11 @@
 Version 1.1.0
 ===============
 * Changed location updates to Google Services API.
-* Integrated basic use of pimatic-location plugin.
+* Integrated use of pimatic-location plugin.
 * Changed to send location instead distance to plugin. Calculation moved to plugin.
 * Added the option to decide if the current address should be shown in Pimatic. (Privacy option)
+* Added the option to change the interval limit.
+* Fixed crash on no connection bug.
 
 Version 1.0.1
 ===============

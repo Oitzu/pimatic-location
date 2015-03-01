@@ -38,6 +38,7 @@ Following Options are available:
 - Password: The Password corresponding to the Pimatic-User.
 - Device-ID: The id of the Device you created for this Smartphone.
 - Interval: The interval of location updates in milliseconds at which you prefer to receive location updates. (Default: 600000 (10 Minutes))
+- Interval Limit: The lower limit of location updates in milliseconds you want to receive. (Default: 60000 (1 Minute))
 - Priority: The priority of the location updates you want to receive. (Default: Balanced Power)
   * Balanced Power: Precision to within a city block, which is an accuracy of approximately 100 meters. With this setting, the location services are likely to use   * WiFi and cell tower positioning.
   * High: Request the most precise location possible. With this setting, the location services are more likely to use GPS.
@@ -62,6 +63,20 @@ Send Intent [
  Mime Type:text/plain 
  Data: 
  Extra:android.intent.extra.INTERVAL: 600000
+ Extra: 
+ Package:de.blackoise.pimaticlocation
+ Class: 
+ Target:Service ]
+```
+
+Tasker example intent config for interval limit:
+```
+Send Intent [ 
+ Action:android.intent.action.SEND 
+ Cat:Default 
+ Mime Type:text/plain 
+ Data: 
+ Extra:android.intent.extra.INTERVALLIMIT: 600000
  Extra: 
  Package:de.blackoise.pimaticlocation
  Class: 

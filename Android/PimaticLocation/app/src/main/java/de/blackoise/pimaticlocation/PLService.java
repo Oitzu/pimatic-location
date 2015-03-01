@@ -90,10 +90,20 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
                     settings.edit().putInt("Priority", extras.getInt("android.intent.extra.PRIORITY")).apply();
                     writeLog("Setting new Priority "+ String.valueOf(extras.getInt("android.intent.extra.PRIORITY")) + " by intent.");
                 }
+                if(extras.containsKey("android.intent.extra.INTERVALLIMIT"))
+                {
+                    settings.edit().putInt("IntervalLimit", extras.getInt("android.intent.extra.INTERVALLIMIT")).apply();
+                    writeLog("Setting new Interval Limit "+ String.valueOf(extras.getInt("android.intent.extra.INTERVALLIMIT")) + " by intent.");
+                }
             }
         }
 
-
+        if(mGoogleApiClient != null)
+        {
+            if(mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
+        }
 
         //mGoogleApiClient.connect();
 
@@ -105,10 +115,11 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
 
 
         int Interval = Integer.parseInt(settings.getString("Interval", "600000"));
+        int IntervalLimit = Integer.parseInt(settings.getString("IntervalLimit", "60000"));
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(Interval);
-        mLocationRequest.setFastestInterval(Interval/2);
+        mLocationRequest.setFastestInterval(IntervalLimit);
 
         String accuracy;
 
