@@ -5,35 +5,71 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.google.android.gms.location.LocationListener;
 
 import org.apache.http.Header;
+import org.apache.http.conn.ConnectionReleaseTrigger;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.FileOutputStream;
 
 /**
  * Created by Oitzu on 03.02.2015.
  */
-public class PLService extends Service {
+public class PLService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private LocationManager locManager;
-    private LocationListener locListener = new myLocationListener();
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
 
     public IBinder onBind(Intent intent) {
         return null;
     }
 
     @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i("PLService", "Connection to GoogleApiClient suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     public void onCreate() {
 
         Log.v("PLService", "Service created.");
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint)
+    {
+        Log.v("PLService", "Connected to GoogleApiClient.");
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result)
+    {
+        Log.i("PLService", "Connection to GoogleApiClient failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if(location!=null){
+            writeLog("Location update received. Provider: " + location.getProvider());
+            updateLocation(location);
+            Log.v("Debug", "Location changed.");
+        }
     }
 
     @Override
@@ -44,104 +80,125 @@ public class PLService extends Service {
             writeLog("Intent with type " + intent.getType()+" received.");
             if ("text/plain".equals(intent.getType())) {
                 Bundle extras = intent.getExtras();
-                int interval = extras.getInt("android.intent.extra.INTERVAL");
-                writeLog("Intent Value: "+String.valueOf(interval));
-                settings.edit().putString("Interval",String.valueOf(interval)).apply();
+                if(extras.containsKey("android.intent.extra.INTERVAL"))
+                {
+                    settings.edit().putString("Interval",String.valueOf(extras.getInt("android.intent.extra.INTERVAL"))).apply();
+                    writeLog("Setting new Interval "+ String.valueOf(extras.getInt("android.intent.extra.INTERVAL")) + " by intent.");
+                }
+                if(extras.containsKey("android.intent.extra.PRIORITY"))
+                {
+                    settings.edit().putInt("Priority", extras.getInt("android.intent.extra.PRIORITY")).apply();
+                    writeLog("Setting new Priority "+ String.valueOf(extras.getInt("android.intent.extra.PRIORITY")) + " by intent.");
+                }
+                if(extras.containsKey("android.intent.extra.INTERVALLIMIT"))
+                {
+                    settings.edit().putInt("IntervalLimit", extras.getInt("android.intent.extra.INTERVALLIMIT")).apply();
+                    writeLog("Setting new Interval Limit "+ String.valueOf(extras.getInt("android.intent.extra.INTERVALLIMIT")) + " by intent.");
+                }
             }
         }
 
-        writeLog("Starting service with interval of " + Integer.parseInt(settings.getString("Interval", "60000")) +"ms.");
+        if(mGoogleApiClient != null)
+        {
+            if(mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
+        }
 
-        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, Integer.parseInt(settings.getString("Interval", "60000")), locListener);
-        locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locListener);
+        //mGoogleApiClient.connect();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+
+        int Interval = Integer.parseInt(settings.getString("Interval", "600000"));
+        int IntervalLimit = Integer.parseInt(settings.getString("IntervalLimit", "60000"));
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(Interval);
+        mLocationRequest.setFastestInterval(IntervalLimit);
+
+        String accuracy;
+
+        switch(settings.getInt("Priority", 0))
+        {
+            case 0:
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                accuracy = "Balanced Power";
+                break;
+            case 1:
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                accuracy = "High";
+                break;
+            case 2:
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+                accuracy = "Low";
+                break;
+            case 3:
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
+                accuracy = "No";
+                break;
+            default:
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                accuracy = "Balanced Power";
+        }
+
+        if(mGoogleApiClient.isConnected())
+        {
+            mGoogleApiClient.reconnect();
+        }
+        else
+        {
+            mGoogleApiClient.connect();
+        }
+
+        writeLog("Starting service with interval of " + Integer.parseInt(settings.getString("Interval", "600000")) +"ms and " + accuracy + " Accuracy.");
+
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onDestroy();
     }
 
     private void updateLocation(final Location lastKnownLocation)
     {
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
         final API api = new API(settings.getString("Host", "pimatic.example.org"), settings.getString("Protocol", "http"), settings.getString("Port", "80"), settings.getString("User", "admin"), settings.getString("Password", "admin"));
-        //first get latitude of pimatic
-        JSONObject jsonParams = new JSONObject();
-        api.get("latitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try
-                {
-                    //save latitude for later use
-                    final JSONObject latitudeVariable = response.getJSONObject("variable");
+        try {
+            //update location
+            JSONObject jsonParams = new JSONObject();
+            jsonParams.put("long", lastKnownLocation.getLongitude());
+            jsonParams.put("lat", lastKnownLocation.getLatitude());
+            jsonParams.put("updateAddress", settings.getBoolean("reportAddress",false)?1:0);
 
-                    //second get longitude of pimatic
-                    JSONObject jsonParams = new JSONObject();
-                    api.get("longitude", getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                //save longitude for later use
-                                final JSONObject longitudeVariable = response.getJSONObject("variable");
-
-                                //set Location to Location-Object
-                                Location pimaticLocation = new Location("JSON");
-                                pimaticLocation.setLatitude(latitudeVariable.getDouble("value"));
-                                pimaticLocation.setLongitude(longitudeVariable.getDouble("value"));
-
-                                Log.i("Location:", lastKnownLocation.toString());
-                                Log.i("Location:", pimaticLocation.toString());
-
-                                //calculate distance
-                                final float distance = lastKnownLocation.distanceTo(pimaticLocation);
-
-                                //update distance variable
-                                JSONObject jsonParams = new JSONObject();
-                                jsonParams.put("type", "value");
-                                jsonParams.put("valueOrExpression", distance);
-                                api.patch(settings.getString("Var", "distance"), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
-                                    @Override
-                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                      //  Toast.makeText(getApplicationContext(), "Distance set.\nSaving settings.", Toast.LENGTH_LONG).show();
-/*
-                                        settings.edit().putString("Host", textHost.getText().toString()).apply();
-                                        settings.edit().putString("Interval", textInterval.getText().toString()).apply();
-                                        settings.edit().putString("User", textUser.getText().toString()).apply();
-                                        settings.edit().putString("Password", textPassword.getText().toString()).apply();
-                                        settings.edit().putBoolean("autoRefresh", autoRefresh.isChecked()).apply();
-                                        settings.edit().putString("Var", textVar.getText().toString()).apply(); */
-                                        writeLog("Updated distance to " + distance +"m");
-                                    }
-
-                                    @Override
-                                    public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                                     //   Toast.makeText(getApplicationContext(), "Couldn't set distance.\nPlease check '"+ textVar.getText().toString() +"'-variable.", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                            catch (JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-                          //  Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check 'Longitude'-variable.", Toast.LENGTH_LONG).show();
-                        }
-
-                    });
-
+            api.update_Location(settings.getString("DeviceID", android.os.Build.MODEL), getApplicationContext(), jsonParams, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    writeLog("Updated location successfully.");
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
-              //  Toast.makeText(getApplicationContext(), "Couldn't get pimatic location.\nPlease check config and 'Latitude'-variable.", Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response) {
+                    writeLog("Failed to update location. Check your connection.");
+                }
+            });
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
+
+
 
     private void writeLog(String text)
     {
@@ -153,7 +210,7 @@ public class PLService extends Service {
 
                 String logLine = date + ": " + text + "\n";
 
-                FileOutputStream fos = openFileOutput("logfile", Context.MODE_PRIVATE | Context.MODE_APPEND);
+                FileOutputStream fos = openFileOutput("logfile", Context.MODE_APPEND);
 
                 fos.write(logLine.getBytes());
 
@@ -166,28 +223,4 @@ public class PLService extends Service {
             }
         }
     }
-
-    private class myLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-
-            if(location!=null){
-                writeLog("Location update received. Provider: " + location.getProvider());
-                updateLocation(location);
-                Log.v("Debug", "Location changed.");
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
 }

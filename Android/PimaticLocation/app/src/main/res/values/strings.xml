@@ -6,7 +6,28 @@
         <item>http</item>
         <item>https</item>
     </string-array>
+    <string-array name="priority_array">
+        <item>Balanced Power</item>
+        <item>High</item>
+        <item>Low</item>
+        <item>No</item>
+    </string-array>
     <string name="title_activity_show_logfile">Pimatic Location Logfile</string>
     <string name="title_activity_settings">Pimatic Location Settings</string>
+
+    <string name="settings_host">Host:</string>
+    <string name="settings_protocol">Protocol:</string>
+    <string name="settings_port">Port:</string>
+    <string name="settings_user">User:</string>
+    <string name="settings_password">Password:</string>
+    <string name="settings_device_id">Device-ID:</string>
+    <string name="settings_interval">Interval:</string>
+    <string name="settings_interval_limit">Interval-Limit:</string>
+    <string name="settings_priority">Priority:</string>
+    <string name="settings_report_address">Report current address</string>
+    <string name="settings_auto_refresh">Auto refresh</string>
+    <string name="settings_write_logfile">Write logfile</string>
+    <string name="settings_test_and_save">Test &amp; Save</string>
+    <string name="settings_ms">ms</string>
 
 </resources>

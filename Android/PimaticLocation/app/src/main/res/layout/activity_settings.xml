@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Host:"
+            android:text="@string/settings_host"
             android:id="@+id/textView"/>
 
         <EditText
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Protocol:"
+        android:text="@string/settings_protocol"
         android:id="@+id/textView7"/>
 
     <Spinner
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Port:"
+        android:text="@string/settings_port"
         android:id="@+id/textView8"/>
 
     <EditText
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="User:"
+            android:text="@string/settings_user"
             android:id="@+id/textView4" />
 
         <EditText
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Password:"
+            android:text="@string/settings_password"
             android:id="@+id/textView5"/>
 
         <EditText
@@ -81,22 +81,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Variable:"
+            android:text="@string/settings_device_id"
             android:id="@+id/textView6"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextVar"
+            android:id="@+id/editTextDeviceID"
             android:inputType="text" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Interval:"
+            android:text="@string/settings_interval"
             android:id="@+id/textView2"/>
-<LinearLayout
+    <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
         <EditText
@@ -109,33 +109,79 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="ms"
+            android:text="@string/settings_ms"
             android:id="@+id/textView3"/>
-</LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settings_interval_limit"
+        android:id="@+id/textView12"/>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:id="@+id/editTextIntervalLimit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/settings_ms"
+            android:id="@+id/textView11"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/settings_priority"
+            android:id="@+id/textView10"/>
+
+        <Spinner
+            android:id="@+id/spinnerPriority"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/priority_array"/>
+    </LinearLayout>
+
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_report_address"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switchAddress"
+        android:checked="false" />
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Auto refresh"
+            android:text="@string/settings_auto_refresh"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/checkBoxRefresh"
-            android:checked="false"
-            android:layout_gravity="left"/>
+            android:layout_gravity="start"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Write logfile"
+        android:text="@string/settings_write_logfile"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/checkBoxLogfile"
-        android:layout_gravity="right"
         android:checked="false" />
-    </LinearLayout>
+
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test &amp; Save"
+            android:text="@string/settings_test_and_save"
             android:id="@+id/SaveButton"
             android:onClick="OnClickSave" />
+
 </LinearLayout>
 </ScrollView>

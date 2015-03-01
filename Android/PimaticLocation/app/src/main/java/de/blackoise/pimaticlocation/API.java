@@ -1,6 +1,7 @@
 package de.blackoise.pimaticlocation;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -49,12 +50,34 @@ public class API {
         }
     }
 
-    public void get(String variable, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+    public void get_variable(String variable, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
         try {
             StringEntity entity = new StringEntity(params.toString());
             entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
             client.get(context, protocol + "://" + hostname + ":" + port + "/api/variables/" + variable, entity, "application/json", responseHandler);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update_LinearDistance(String deviceID, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+        try {
+            StringEntity entity = new StringEntity(params.toString());
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            client.get(context, protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/updateLinearDistance", entity, "application/json", responseHandler);
+            Log.d("API", protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/setLinearDistance");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update_Location(String deviceID, Context context, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+        try {
+            StringEntity entity = new StringEntity(params.toString());
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            client.get(context, protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/updateLocation", entity, "application/json", responseHandler);
+            Log.d("API", protocol + "://" + hostname + ":" + port + "/api/device/" + deviceID + "/updateLocation");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
