@@ -1,3 +1,33 @@
 <resources>
+  <string name="app_name">Pimatic Location</string>
+    <string name="action_settings">Paramètres</string>
 
+    <string-array name="protocol_array">
+        <item>http</item>
+        <item>https</item>
+    </string-array>
+    <string-array name="priority_array">
+        <item>Optimizé</item>
+        <item>Haute</item>
+        <item>Basse</item>
+        <item>Non</item>
+    </string-array>
+    <string name="title_activity_show_logfile">Journal Pimatic Location</string>
+    <string name="title_activity_settings">Configuration Pimatic Location</string>
+
+    <string name="settings_host">Host:</string>
+    <string name="settings_protocol">Protocol:</string>
+    <string name="settings_port">Port:</string>
+    <string name="settings_user">Utilisateur:</string>
+    <string name="settings_password">Secret:</string>
+    <string name="settings_device_id">Téléphone-ID:</string>
+    <string name="settings_interval">Interval:</string>
+    <string name="settings_interval_limit">Interval-Limite:</string>
+    <string name="settings_priority">Priorité:</string>
+    <string name="settings_report_address">Rapporter addresse actuelle</string>
+    <string name="settings_auto_refresh">Rafraîchissement Auto</string>
+    <string name="settings_write_logfile">Écrire logfile</string>
+    <string name="settings_test_and_save">Test &amp; Enregistrer</string>
+    <string name="settings_ms">ms</string>
+ 
 </resources>
