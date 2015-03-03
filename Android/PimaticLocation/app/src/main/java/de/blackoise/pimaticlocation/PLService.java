@@ -38,6 +38,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public void onConnectionSuspended(int cause) {
         Log.i("PLService", "Connection to GoogleApiClient suspended");
+        writeLog("Connection to GoogleApiClient suspended.");
         mGoogleApiClient.connect();
     }
 
@@ -45,13 +46,14 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     public void onCreate() {
 
         Log.v("PLService", "Service created.");
+        writeLog("Service created.");
     }
 
     @Override
     public void onConnected(Bundle connectionHint)
     {
         Log.v("PLService", "Connected to GoogleApiClient.");
-
+        writeLog("Connected to GoogleApiClient.");
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
@@ -59,6 +61,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public void onConnectionFailed(ConnectionResult result)
     {
+        writeLog("Connection to GoogleApiClient failed.");
         Log.i("PLService", "Connection to GoogleApiClient failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
@@ -75,6 +78,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("PLService", "Service started.");
+        writeLog("Service started.");
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
         if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
             writeLog("Intent with type " + intent.getType()+" received.");
@@ -100,6 +104,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
 
         if(mGoogleApiClient != null)
         {
+            writeLog("Disconnecting GoogleApiClient.");
             if(mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.disconnect();
             }
@@ -148,10 +153,12 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
 
         if(mGoogleApiClient.isConnected())
         {
+            writeLog("Reconnecting GoogleApiClient.");
             mGoogleApiClient.reconnect();
         }
         else
         {
+            writeLog("Connecting GoogleApiClient.");
             mGoogleApiClient.connect();
         }
 
@@ -162,6 +169,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
 
     @Override
     public void onDestroy() {
+        writeLog("Service Destroyed.");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
@@ -194,6 +202,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
         }
         catch (JSONException e)
         {
+            writeLog("Failed to call API.");
             e.printStackTrace();
         }
     }
