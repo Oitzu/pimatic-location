@@ -20,8 +20,8 @@ Example:
       "id": "your-phone",
       "name": "your-phone",
       "class": "LocationDevice",
-      "lat": "52.5200066",
-      "long": "13.404954"
+      "lat": 52.5200066,
+      "long": 13.404954
     },
 ```
 The lat and long values correspond to the location you want the distance to be calculated.
