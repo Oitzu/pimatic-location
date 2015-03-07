@@ -24,6 +24,16 @@ Example:
       "long": 13.404954
     },
 ```
+
+Optional parameters for each Device:
+```
+      "useGoogleMaps": true,
+      "googleMapsApiKey": "your-api-key-here"
+```
+With the optional parameter "useGoogleMaps" you can optionaly disable the usage of GoogleMaps. (You no longer get a route-distance, eta or address)
+With the parameter "googleMapsApiKey" you can define your own ApiKey, if you got to many googleMapsApi-requests running.
+You can obtain a ApiKey in the Google developers console https://console.developers.google.com . You need also to activate the "Directions API" in your account.
+
 The lat and long values correspond to the location you want the distance to be calculated.
 You can use this website to get your longitude and latitude.
 http://www.mapcoordinates.net/en
