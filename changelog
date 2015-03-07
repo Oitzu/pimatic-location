@@ -1,3 +1,9 @@
+Version 1.1.1
+===============
+* Added French translation (thx to sebastien-vg)
+* Fixed bug "App crashes if location services disabled" #18
+* Fixed bug "Prevent a crash by NPE in service if intent == null" #24 (thx to sweetpi)
+
 Version 1.1.0
 ===============
 * Changed location updates to Google Services API.

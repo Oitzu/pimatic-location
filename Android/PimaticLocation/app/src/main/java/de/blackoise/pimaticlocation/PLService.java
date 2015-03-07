@@ -76,7 +76,7 @@ public class PLService extends Service implements GoogleApiClient.ConnectionCall
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("PLService", "Service started.");
         final SharedPreferences settings = getSharedPreferences("de.blackoise.pimaticlocation", MODE_PRIVATE);
-        if (Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
+        if (intent != null && Intent.ACTION_SEND.equals(intent.getAction()) && intent.getType() != null) {
             writeLog("Intent with type " + intent.getType()+" received.");
             if ("text/plain".equals(intent.getType())) {
                 Bundle extras = intent.getExtras();
