@@ -46,7 +46,7 @@ public class Settings extends Activity {
     Spinner spinnerProtocol;
     Spinner spinnerPriority;
     CheckBox writeLogfile;
-    Switch switchAddress;
+    CheckBox checkBoxAddress;
     EditText textIntervalLimit;
 
     @Override
@@ -66,7 +66,7 @@ public class Settings extends Activity {
         spinnerProtocol = (Spinner) findViewById(R.id.spinnerProtocol);
         writeLogfile = (CheckBox) findViewById(R.id.checkBoxLogfile);
         spinnerPriority = (Spinner) findViewById(R.id.spinnerPriority);
-        switchAddress = (Switch) findViewById(R.id.switchAddress);
+        checkBoxAddress = (CheckBox) findViewById(R.id.checkBoxAddress);
         textIntervalLimit = (EditText) findViewById(R.id.editTextIntervalLimit);
 
         textHost.setText(settings.getString("Host", "pimatic.example.org"));
@@ -89,7 +89,7 @@ public class Settings extends Activity {
         spinnerPriority.setSelection(settings.getInt("Priority", 0));
 
         writeLogfile.setChecked(settings.getBoolean("writeLogfile", false));
-        switchAddress.setChecked(settings.getBoolean("reportAddress", false));
+        checkBoxAddress.setChecked(settings.getBoolean("reportAddress", false));
         textIntervalLimit.setText(settings.getString("IntervalLimit", "60000"));
     }
 
@@ -140,7 +140,7 @@ public class Settings extends Activity {
                     JSONObject jsonParams = new JSONObject();
                     jsonParams.put("long", lastKnownLocation.getLongitude());
                     jsonParams.put("lat", lastKnownLocation.getLatitude());
-                    jsonParams.put("updateAddress", switchAddress.isChecked() ? 1 : 0);
+                    jsonParams.put("updateAddress", checkBoxAddress.isChecked() ? 1 : 0);
 
                     api.update_Location(textDeviceID.getText().toString(), getApplicationContext(), jsonParams, new JsonHttpResponseHandler() {
                         @Override
@@ -162,7 +162,7 @@ public class Settings extends Activity {
                                 getApplicationContext().startService(PLServiceIntent);
                             }
                             settings.edit().putInt("Priority", spinnerPriority.getSelectedItemPosition()).apply();
-                            settings.edit().putBoolean("reportAddress", switchAddress.isChecked()).apply();
+                            settings.edit().putBoolean("reportAddress", checkBoxAddress.isChecked()).apply();
                             settings.edit().putString("IntervalLimit", textIntervalLimit.getText().toString()).apply();
                         }
 

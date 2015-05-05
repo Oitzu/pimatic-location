@@ -25,6 +25,21 @@ Example:
     },
 ```
 
+If you want to use the Apple iCloud to locate your Devices your Device-Configuration should look like this:
+```
+    {
+      "id": "your-phone",
+      "name": "your-phone",
+      "class": "LocationDevice",
+      "lat": 52.5200066,
+      "long": 13.404954,
+      "iCloudUser": "Username",
+      "iCloudPass": "Password",
+      "iCloudDevice": "DeviceName",
+      "iCloudInterval": 60000
+    },
+```
+
 Optional parameters for each Device:
 ```
       "useGoogleMaps": true,
