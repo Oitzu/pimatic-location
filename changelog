@@ -1,3 +1,8 @@
+Version 1.1.2
+===============
+* Replaced switch button with checkbox for backward compatibility.
+* Raised targetSdkVersion to 22 (Android 5.1.1).
+
 Version 1.1.1
 ===============
 * Added French translation (thx to sebastien-vg)
