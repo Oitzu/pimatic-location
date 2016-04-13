@@ -32,10 +32,17 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
+        </service>
+
+        <receiver
+            android:enabled="true"
+            android:name=".BootUpReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </service>
+        </receiver>
 
         <activity
             android:name=".ShowLogfile"
